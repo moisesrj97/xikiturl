@@ -1,4 +1,4 @@
-package e2e_utils
+package wait_for_health_check
 
 import (
 	"fmt"
