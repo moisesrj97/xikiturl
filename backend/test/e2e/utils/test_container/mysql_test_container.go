@@ -13,6 +13,7 @@ func MySqlTestContainer() TestContainer {
 		},
 		Environment: []Environment{
 			{Key: "MYSQL_ROOT_PASSWORD", Value: "password"},
+			{Key: "MYSQL_DATABASE", Value: "xikiturl"},
 		},
 		WaitLog:      "/usr/sbin/mysqld: ready for connections",
 		StartTimeout: 30 * time.Second,
