@@ -10,8 +10,11 @@ import (
 var password = "password"
 var dbName = "xikiturl"
 
-func MySqlTestContainer() TestContainer {
+type MySqlTestContainer struct {
+	TestContainer
+}
 
+func NewMySqlTestContainer() MySqlTestContainer {
 	info := ContainerInfo{
 		Image: "mysql",
 		Ports: []int{3306},
@@ -23,14 +26,26 @@ func MySqlTestContainer() TestContainer {
 		StartTimeout: 30 * time.Second,
 	}
 	name := "test-container-" + rand.Text()
-	testContainer := TestContainer{
-		Name: name,
-		Info: info,
+	testContainer := MySqlTestContainer{
+		TestContainer: TestContainer{
+			Name: name,
+			Info: info,
+		},
 	}
 	return testContainer
 }
 
-func GenerateConnectionString(portMappings []PortMapping) string {
+func (mq *MySqlTestContainer) Start() (string, error) {
+	portMappings, err := mq.TestContainer.Start()
+
+	if err != nil {
+		return "", err
+	}
+
+	return generateConnectionString(portMappings), nil
+}
+
+func generateConnectionString(portMappings []PortMapping) string {
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s",
 		"root",
 		password,

@@ -14,17 +14,17 @@ import (
 )
 
 func TestRedirect(t *testing.T) {
-	testContainer := test_container.MySqlTestContainer()
+	testContainer := test_container.NewMySqlTestContainer()
 	t.Cleanup(func() {
 		defer testContainer.Stop()
 	})
 
-	portMappings, err := testContainer.Start()
+	connectionString, err := testContainer.Start()
 	if err != nil {
 		t.Fatalf("Error starting container: %v", err)
 	}
 
-	err = prepare_db.PrepareDb(test_container.GenerateConnectionString(portMappings))
+	err = prepare_db.PrepareDb(connectionString)
 
 	if err != nil {
 		t.Fatalf("Error preparing db: %v", err)
