@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"backend/test/e2e/utils/prepare_db"
 	"io"
 	"net/http"
 	"testing"
@@ -13,7 +14,7 @@ import (
 )
 
 func TestRedirect(t *testing.T) {
-	testContainer := test_container.MySqlTestContainer()
+	testContainer, connectionString := test_container.MySqlTestContainer()
 	t.Cleanup(func() {
 		defer testContainer.Stop()
 	})
@@ -21,6 +22,12 @@ func TestRedirect(t *testing.T) {
 	err := testContainer.Start()
 	if err != nil {
 		t.Fatalf("Error starting container: %v", err)
+	}
+
+	err = prepare_db.PrepareDb(connectionString)
+
+	if err != nil {
+		t.Fatalf("Error preparing db: %v", err)
 	}
 
 	go func() {
