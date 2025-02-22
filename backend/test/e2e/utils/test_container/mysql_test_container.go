@@ -3,19 +3,18 @@ package test_container
 import (
 	"crypto/rand"
 	"fmt"
+	"strconv"
 	"time"
 )
 
-func MySqlTestContainer() (TestContainer, string) {
-	password := "password"
-	dbName := "xikiturl"
-	port := "3306"
+var password = "password"
+var dbName = "xikiturl"
+
+func MySqlTestContainer() TestContainer {
 
 	info := ContainerInfo{
 		Image: "mysql",
-		PortMappings: []PortMapping{
-			{HostPort: port, ContainerPort: port},
-		},
+		Ports: []int{3306},
 		Environment: []Environment{
 			{Key: "MYSQL_ROOT_PASSWORD", Value: password},
 			{Key: "MYSQL_DATABASE", Value: dbName},
@@ -28,10 +27,14 @@ func MySqlTestContainer() (TestContainer, string) {
 		Name: name,
 		Info: info,
 	}
-	return testContainer, fmt.Sprintf("%s:%s@tcp(%s)/%s",
+	return testContainer
+}
+
+func GenerateConnectionString(portMappings []PortMapping) string {
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s",
 		"root",
 		password,
-		"127.0.0.1:"+port,
+		"127.0.0.1:"+strconv.Itoa(portMappings[0].HostPort),
 		dbName,
 	)
 }

@@ -16,8 +16,8 @@ func (a *Args) AddEnv(envs []Environment) {
 	}
 }
 
-func (a *Args) AddPortMappings(portMappings []PortMapping) {
-	for _, port := range portMappings {
-		*a = append(*a, "-p", fmt.Sprintf("%s:%s", port.HostPort, port.ContainerPort))
+func (a *Args) AddPortMappings(ports []int) {
+	for _, port := range ports {
+		*a = append(*a, "-p", fmt.Sprintf("%d", port))
 	}
 }
